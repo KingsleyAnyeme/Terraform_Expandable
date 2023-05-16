@@ -23,8 +23,8 @@ resource "aws_vpc" "my_vpc" {
   tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
-    "Email"      = "kingsley.anyeme@gmail.com"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 
@@ -63,8 +63,8 @@ resource "aws_internet_gateway" "main_gw" {
   tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
-    "Email"      = "kingsley.anyeme@gmail.com"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 
@@ -76,11 +76,11 @@ resource "aws_route_table" "public_route" {
     cidr_block = var.cidr["public_route"]
     gateway_id = aws_internet_gateway.main_gw.id # chained resource
   }
-  tags = {
+ tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
-    "Email"      = "kingsley.anyeme@gmail.com"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 
@@ -118,8 +118,8 @@ resource "aws_network_acl" "public_nacl" {
   tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
-    "Email"      = "kingsley.anyeme@gmail.com"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 # Declaring the subnet asso for Nacls
@@ -141,37 +141,24 @@ resource "aws_network_acl" "private_nacl" {
     rule_no    = 10
     action     = "allow"
     cidr_block = var.cidr["private_nacl"]
-    from_port  = "0"
-    to_port    = "0"
+    from_port  = var.allowed_ports[3]
+    to_port    = var.allowed_ports[3]
   }
-  # egress {
-  #   protocol   = "tcp"
-  #   rule_no    = 10
-  #   action     = "allow"
-  #   cidr_block = var.cidr["private_nacl"]
-  #   from_port  = "80"
-  #   to_port    = "80"
-  # }
+
   ingress {
     protocol   = "tcp"
     rule_no    = 20
     action     = "allow"
     cidr_block = var.cidr["private_nacl"]
-    from_port  = "0"
-    to_port    = "0"
+    from_port  = var.allowed_ports[3]
+    to_port    = var.allowed_ports[3]
   }
-  # ingress {
-  #   protocol   = "tcp"
-  #   rule_no    = 20
-  #   action     = "allow"
-  #   cidr_block = var.cidr["private_nacl"]
-  #   from_port  = "80"
-  #   to_port    = "80"
-  # }
-  tags = {
+  
+ tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 # Declaring the subnet asso for private Nacls
@@ -214,8 +201,8 @@ resource "aws_security_group" "my_sg" {
   tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
-    "Email"      = "kingsley.anyeme@gmail.com"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 
@@ -246,8 +233,8 @@ resource "aws_instance" "my-ec2" {
   tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
-    "Maintainer" = "Kingsley"
-    "Email"      = "kingsley.anyeme@gmail.com"
+    "Maintainer" = var.maintainer
+    "Email"      = var.email
   }
 }
 
@@ -268,4 +255,12 @@ variable "allowed_cidr" {
 variable "allowed_ports" {
   type = list(string)
   description = "list all all allowed ports to serve for the security group resource." 
+}
+variable "email" {
+  type = string
+  description = "value for company email"
+}
+variable "maintainer" {
+  type = string
+  description = "value for maintainer' name"
 }
