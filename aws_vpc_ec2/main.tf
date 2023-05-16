@@ -24,6 +24,7 @@ resource "aws_vpc" "my_vpc" {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
     "Maintainer" = "Kingsley"
+    "Email"      = "kingsley.anyeme@gmail.com"
   }
 }
 
@@ -63,6 +64,7 @@ resource "aws_internet_gateway" "main_gw" {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
     "Maintainer" = "Kingsley"
+    "Email"      = "kingsley.anyeme@gmail.com"
   }
 }
 
@@ -78,6 +80,7 @@ resource "aws_route_table" "public_route" {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
     "Maintainer" = "Kingsley"
+    "Email"      = "kingsley.anyeme@gmail.com"
   }
 }
 
@@ -101,21 +104,22 @@ resource "aws_network_acl" "public_nacl" {
     rule_no    = 20
     action     = "allow"
     cidr_block = var.cidr["public_nacl"]
-    from_port  = "0"
-    to_port    = "0"
+    from_port  = var.allowed_ports[3]
+    to_port    = var.allowed_ports[3]
   }
   ingress {
     protocol   = "tcp"
     rule_no    = 10
     action     = "allow"
     cidr_block = var.cidr["public_nacl"]
-    from_port  = "0"
-    to_port    = "0"
+    from_port  = var.allowed_ports[3]
+    to_port    = var.allowed_ports[3]
   }
   tags = {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
     "Maintainer" = "Kingsley"
+    "Email"      = "kingsley.anyeme@gmail.com"
   }
 }
 # Declaring the subnet asso for Nacls
@@ -188,24 +192,24 @@ resource "aws_security_group" "my_sg" {
 
   ingress {
     description = "ssh to instance"
-    from_port   = 22
-    to_port     = 22
+    from_port   = var.allowed_ports[0]
+    to_port     = var.allowed_ports[0]
     protocol    = "tcp"
-    cidr_blocks = [var.sg_ssh]
+    cidr_blocks = [var.allowed_cidr[0]] #"var.allowed_cidr"[0]
   }
   ingress {
     description = "http to instance"
-    from_port   = 80
-    to_port     = 80
+    from_port   = var.allowed_ports[1]
+    to_port     = var.allowed_ports[1]
     protocol    = "tcp"
-    cidr_blocks = [var.sg_http]
+    cidr_blocks = [var.allowed_cidr[1]] #"var.allowed_cidr"[1]
   }
   egress {
     description = "http & ssh from VPC"
-    from_port   = 0
-    to_port     = 0
+    from_port   = var.allowed_ports[3]
+    to_port     = var.allowed_ports[3]
     protocol    = "-1"
-    cidr_blocks = [var.sg_all]
+    cidr_blocks = [var.allowed_cidr[1]] #"var.allowed_cidr[1]"
   }
   tags = {
     "Name"       = "terraform-on-aws"
@@ -243,6 +247,7 @@ resource "aws_instance" "my-ec2" {
     "Name"       = "terraform-on-aws"
     "Department" = "Development"
     "Maintainer" = "Kingsley"
+    "Email"      = "kingsley.anyeme@gmail.com"
   }
 }
 
@@ -256,18 +261,11 @@ variable "cidr" {
   description = "map of cidr"
   type        = map(string)
 }
-
-# Variable for Security Group
-variable "sg_ssh" {
-  type        = string
-  description = "rule for ssh"
+variable "allowed_cidr" {
+   type        = list(string)
+   description = "list of permitted cidrs"
 }
-variable "sg_http" {
-  type        = string
-  description = "rule for http"
+variable "allowed_ports" {
+  type = list(string)
+  description = "list all all allowed ports to serve for the security group resource." 
 }
-variable "sg_all" {
-  type        = string
-  description = "rule for all out"
-}
-
