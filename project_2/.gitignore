@@ -1,0 +1,6 @@
+terraform.tfvars
+.terraform
+terraform.tfstate.backup
+terraform.tfstate
+.terraform.lock.hcl
+terraform-provider-aws_v4.67.0_x5
