@@ -12,22 +12,21 @@ Follow these steps to deploy the application:
 
 1. Clone the repository to your local machine:
 bash
-```
-Copy code
 
+```
 git clone https://github.com/your-username/single-tier-app.git
 ```
 2. Change into the cloned directory:
 bash
+
 ```
-Copy code
 cd single-tier-app
 ```
 
 3. Initialize the Terraform workspace:
 csharp
+
 ```
-Copy code
 terraform init
 ```
 
@@ -35,13 +34,13 @@ terraform init
 
 5. Run a Terraform plan to review the changes that will be applied:
 
-Copy code
+
 ```
 terraform plan 
 ```
 
 6. If the plan looks good, apply the changes:
-Copy code
+
 ```
 terraform apply
 ```
@@ -64,7 +63,7 @@ To access the web application hosted on the EC2 instance:
 To clean up and remove all the resources created by the deployment:
 
 1. Run the following command to destroy the infrastructure:
-Copy code
+
 ```
 terraform destroy
 ```
