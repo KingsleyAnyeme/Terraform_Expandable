@@ -1,5 +1,5 @@
 
-# Define the vpc with the cidr
+# Define a custom vpc with the cidr
 resource "aws_vpc" "my_vpc" {
   cidr_block           = var.cidr["vpc_cidr"]
   enable_dns_hostnames = true
